@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: company-service
+
+  # 추가: DB 연결 설정
+  datasource:
+    url: jdbc:postgresql://localhost:5432/da_it_da_db  # Docker의 DB 이름
+    username: postgres_daitda
+    password: fivesix2026!
+    driver-class-name: org.postgresql.Driver
+
+  # 추가: JPA 설정 (선택 사항이지만 권장)
+  jpa:
+    hibernate:
+      ddl-auto: update # 엔티티 변경 시 테이블 자동 생성/수정
+    show-sql: true     # 실행되는 SQL 로그 확인
+
+server:
+  port: 8082
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/} # 기본값 설정
