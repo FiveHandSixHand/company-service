@@ -1,23 +1,30 @@
 package com.fhsh.daitda.company.presentation.controller;
 
-import com.fhsh.daitda.company.application.command.CompanyCreateCommand;
-import com.fhsh.daitda.company.application.result.CompanyCreateResult;
 import com.fhsh.daitda.company.application.service.command.CompanyCommandService;
+import com.fhsh.daitda.company.application.service.query.CompanyQueryService; // 1. Import 추가
+import com.fhsh.daitda.company.presentation.dto.response.GetCompanyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
-@RequestMapping("/api/v1/companies") // ✨ 규칙 적용: v1 + 복수형(companies)
+@RequestMapping("/api/v1/companies")
 @RequiredArgsConstructor
 public class CompanyController {
 
 	private final CompanyCommandService companyCommandService;
 
-	@PostMapping
-	public ResponseEntity<CompanyCreateResult> createCompany(@RequestBody CompanyCreateCommand command) {
-		// 서비스 호출
-		CompanyCreateResult result = companyCommandService.createCompany(command);
-		return ResponseEntity.ok(result);
+	private final CompanyQueryService companyQueryService;
+
+	/**
+	 * 업체 단건 상세 조회
+	 */
+	@GetMapping("/{companyId}")
+	public ResponseEntity<GetCompanyResponse> getCompany(@PathVariable UUID companyId) {
+		// 3. 이제 companyQueryService를 사용할 수 있습니다.
+		GetCompanyResponse response = companyQueryService.getCompany(companyId);
+		return ResponseEntity.ok(response);
 	}
 }
