@@ -22,3 +22,7 @@ eureka:
   client:
     service-url:
       defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/} # 기본값 설정
+data:
+  web:
+    pageable:
+      default-page-size: 20
