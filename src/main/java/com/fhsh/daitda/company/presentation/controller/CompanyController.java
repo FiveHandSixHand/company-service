@@ -2,6 +2,7 @@ package com.fhsh.daitda.company.presentation.controller;
 
 import com.fhsh.daitda.company.application.service.command.CompanyCommandService;
 import com.fhsh.daitda.company.application.service.query.CompanyQueryService; // 1. Import 추가
+import com.fhsh.daitda.company.presentation.dto.request.UpdateCompanyRequest;
 import com.fhsh.daitda.company.presentation.dto.response.GetCompanyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,4 +28,22 @@ public class CompanyController {
 		GetCompanyResponse response = companyQueryService.getCompany(companyId);
 		return ResponseEntity.ok(response);
 	}
+
+	/**
+	 * 업체 수정
+	 */
+
+	@PutMapping("/{companyId}")
+	public ResponseEntity<Void> updateCompany(
+		@PathVariable UUID companyId,
+		@RequestBody UpdateCompanyRequest request) {
+		// 서비스 호출
+		companyCommandService.modifyCompany(companyId, request);
+		// 수정 성공 시 보통 200 OK 또는 204 No Content를 반환합니다.
+		return ResponseEntity.ok().build();
+	}
+
+
+
+
 }

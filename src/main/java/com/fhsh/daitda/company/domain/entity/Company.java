@@ -36,7 +36,7 @@ public class Company {
 	@Column(name = "company_name", nullable = false, length = 100)
 	private String name;
 
-	// ✨ 수정: String address를 Address 객체로 변경
+	//  시군구 주소 입력
 	@Embedded
 	@AttributeOverrides({
 		@AttributeOverride(name = "city", column = @Column(name = "company_city", nullable = false)),
@@ -44,6 +44,16 @@ public class Company {
 		@AttributeOverride(name = "street", column = @Column(name = "company_street", nullable = false))
 	})
 	private Address address;
+
+	// 업체 수정
+	public void update(String name, CompanyStatus type, Address address) {
+		this.name = name;
+		this.type = type;
+		this.address = address;
+		// updated_at, updated_by는 Auditing 기능으로 자동 업데이트됩니다.
+	}
+
+
 
 	// --- Audit 필드 ---
 	@CreatedDate
