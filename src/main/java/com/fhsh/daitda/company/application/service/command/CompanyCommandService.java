@@ -22,14 +22,10 @@ public class CompanyCommandService {
 
 	public CompanyCreateResult createCompany(CompanyCreateCommand command) {
 
-
-
-		// 1. command.getAddress()로 Dto를 가져온 뒤 toEntity() 호출
-		// (기존의 command.address() -> command.getAddress()로 수정)
+		// 1. 주소 정보를 엔티티로 변환 (Command 내부에 만든 toEntity 사용)
 		Address address = command.getAddress().toEntity();
 
 		// 2. 도메인 엔티티 생성
-		// (기존의 hubId(), type(), name() -> getHubId(), getType(), getName()으로 수정)
 		Company company = Company.create(
 			command.getHubId(),
 			command.getType(),
@@ -40,8 +36,7 @@ public class CompanyCommandService {
 		// 3. 저장
 		Company savedCompany = companyRepository.save(company);
 
-
-		// 4. 결과 반환 (엔티티의 필드명 companyId에 맞춰 호출)
+		// 4. 결과 반환
 		return CompanyCreateResult.from(
 			savedCompany.getCompanyId(),
 			savedCompany.getName()
@@ -74,6 +69,20 @@ public class CompanyCommandService {
 		// Dirty Checking 덕분에 따로 repository.save()를 부르지 않아도 됩니다!
 	}
 
+	/**
+	 * 업체 삭제  로직
+	 */
+
+	@Transactional
+	public void deleteCompany(UUID companyId, UUID userId) {
+		Company company = companyRepository.findById(companyId)
+			.orElseThrow(() -> new IllegalArgumentException("삭제할 업체를 찾을 수 없습니다."));
+
+		// Soft Delete 실행
+		company.delete(userId);
+
+		// 역시 변경 감지(Dirty Checking)로 인해 자동으로 update 쿼리가 날아갑니다.
+	}
 
 
 

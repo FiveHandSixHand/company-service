@@ -3,6 +3,8 @@ package com.fhsh.daitda.company.domain.entity;
 import com.fhsh.daitda.company.domain.enums.CompanyStatus;
 import jakarta.persistence.*;
 import lombok.*;
+
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -19,6 +21,7 @@ import java.util.UUID;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @EntityListeners(AuditingEntityListener.class)
+@SQLRestriction("deleted_at IS NULL")
 public class Company {
 
 	@Id
@@ -51,6 +54,13 @@ public class Company {
 		this.type = type;
 		this.address = address;
 		// updated_at, updated_by는 Auditing 기능으로 자동 업데이트됩니다.
+	}
+
+	// 업체 삭제
+	public void delete(UUID userId) {
+		this.deletedAt = LocalDateTime.now();
+		this.deletedBy = userId;
+		// 만약 is_active 필드가 있다면 false로 바꿀 수도 있습니다.
 	}
 
 
