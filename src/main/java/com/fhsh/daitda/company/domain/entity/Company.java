@@ -1,23 +1,17 @@
 package com.fhsh.daitda.company.domain.entity;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.hibernate.annotations.SQLRestriction;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fhsh.daitda.company.domain.enums.CompanyStatus;
+import com.fhsh.daitda.domain.BaseUserEntity;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -36,12 +30,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@EntityListeners(AuditingEntityListener.class)
 @SQLRestriction("deleted_at IS NULL")
-public class Company {
+public class Company extends BaseUserEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
+
 	@Column(name = "company_id", updatable = false, nullable = false)
 	private UUID companyId; // ✨ 규칙 적용: 식별자 필드명 수정
 
@@ -63,23 +57,6 @@ public class Company {
 		@AttributeOverride(name = "street", column = @Column(name = "company_street", nullable = false))
 	})
 	private Address address;
-	// --- Audit 필드 ---
-	@CreatedDate
-	@Column(name = "created_at", updatable = false)
-	private LocalDateTime createdAt;
-	@CreatedBy
-	@Column(name = "created_by")
-	private UUID createdBy;
-	@LastModifiedDate
-	@Column(name = "updated_at")
-	private LocalDateTime updatedAt;
-	@LastModifiedBy
-	@Column(name = "updated_by")
-	private UUID updatedBy;
-	@Column(name = "deleted_at")
-	private LocalDateTime deletedAt;
-	@Column(name = "deleted_by")
-	private UUID deletedBy;
 
 	// ✨ 정적 팩토리 메서드 수정: 파라미터로 Address 객체를 받음
 	public static Company create(UUID hubId, CompanyStatus type, String name, Address address) {
@@ -101,8 +78,8 @@ public class Company {
 
 	// 업체 삭제
 	public void delete(UUID userId) {
-		this.deletedAt = LocalDateTime.now();
-		this.deletedBy = userId;
-		// 만약 is_active 필드가 있다면 false로 바꿀 수도 있습니다.
+		// userId를 String으로 변환하여 부모의 delete 로직 실행
+		// 내부적으로 deletedAt 세팅과 deletedBy 세팅이 한꺼번에 일어납니다.
+		super.delete(userId.toString());
 	}
 }
