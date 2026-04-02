@@ -1,13 +1,15 @@
 package com.fhsh.daitda.company.infrastructure.persistence.repository;
 
-import com.fhsh.daitda.company.domain.entity.Company;
-import com.fhsh.daitda.company.domain.repository.CompanyRepository;
-import lombok.RequiredArgsConstructor;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-import java.util.UUID;
+import com.fhsh.daitda.company.domain.entity.Company;
+import com.fhsh.daitda.company.domain.repository.CompanyRepository;
+
+import lombok.RequiredArgsConstructor;
 
 // 1. Spring Data JPA가 실제 DB 작업을 수행할 내부 인터페이스
 @Repository

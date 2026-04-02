@@ -1,10 +1,12 @@
 package com.fhsh.daitda.company.presentation.dto.request;
 
+import java.util.UUID;
+
 import com.fhsh.daitda.company.application.command.CompanyCreateCommand;
 import com.fhsh.daitda.company.domain.enums.CompanyStatus;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor

@@ -1,11 +1,13 @@
 package com.fhsh.daitda.company.domain.entity;
 
 import jakarta.persistence.Embeddable;
-import lombok.*;
-import com.fhsh.daitda.domain.BaseEntity;
-                     // BaseUserEntity  // 사용자 정보를받아오려면
-					//BaseEntity 수정 엔티티 (사용자 시간)
-
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+// BaseUserEntity  // 사용자 정보를받아오려면
+//BaseEntity 수정 엔티티 (사용자 시간)
 
 @Embeddable
 @Getter

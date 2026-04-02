@@ -2,6 +2,9 @@ package com.fhsh.daitda.company.application.service.command;
 
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fhsh.daitda.company.application.command.CompanyCreateCommand;
 import com.fhsh.daitda.company.application.result.CompanyCreateResult;
 import com.fhsh.daitda.company.domain.entity.Address;
@@ -10,8 +13,6 @@ import com.fhsh.daitda.company.domain.repository.CompanyRepository;
 import com.fhsh.daitda.company.presentation.dto.request.UpdateCompanyRequest;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -83,7 +84,5 @@ public class CompanyCommandService {
 
 		// 역시 변경 감지(Dirty Checking)로 인해 자동으로 update 쿼리가 날아갑니다.
 	}
-
-
 
 }

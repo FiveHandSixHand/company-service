@@ -1,6 +1,7 @@
 package com.fhsh.daitda.company.presentation.dto.request;
 
 import com.fhsh.daitda.company.domain.enums.CompanyStatus;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -1,13 +1,15 @@
 package com.fhsh.daitda.company.application.service.query;
 
-import com.fhsh.daitda.company.domain.entity.Company;
-import com.fhsh.daitda.company.domain.repository.CompanyRepository;
-import com.fhsh.daitda.company.presentation.dto.response.GetCompanyResponse;
-import lombok.RequiredArgsConstructor;
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import com.fhsh.daitda.company.domain.entity.Company;
+import com.fhsh.daitda.company.domain.repository.CompanyRepository;
+import com.fhsh.daitda.company.presentation.dto.response.GetCompanyResponse;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
