@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class DaitdaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DaitdaApplication.class, args);
+		SpringApplication.run( DaitdaApplication.class, args);
 	}
 
 }
