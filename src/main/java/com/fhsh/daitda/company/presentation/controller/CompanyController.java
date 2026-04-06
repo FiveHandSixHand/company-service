@@ -1,21 +1,38 @@
 package com.fhsh.daitda.company.presentation.controller;
 
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fhsh.daitda.company.application.command.CompanyCreateCommand;
 import com.fhsh.daitda.company.application.result.CompanyCreateResult;
 import com.fhsh.daitda.company.application.service.command.CompanyCommandService;
-import com.fhsh.daitda.company.application.service.query.CompanyQueryService; // 1. Import 추가
+import com.fhsh.daitda.company.application.service.query.CompanyQueryService;
 import com.fhsh.daitda.company.presentation.dto.request.CompanyCreateRequest;
 import com.fhsh.daitda.company.presentation.dto.request.UpdateCompanyRequest;
 import com.fhsh.daitda.company.presentation.dto.response.GetCompanyResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.fhsh.daitda.response.CommonResponse;
 
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/companies")
 @RequiredArgsConstructor
+
 public class CompanyController {
 
 	private final CompanyCommandService companyCommandService;
@@ -23,10 +40,13 @@ public class CompanyController {
 	private final CompanyQueryService companyQueryService;
 
 	/**
-	 * 업체 등록 API (추가됨!)
+	 * Creates a new company from the provided request.
+	 *
+	 * @param request the company creation request containing hubId, type, name, and address
+	 * @return a success message that includes the created company's ID
 	 */
 	@PostMapping
-	public ResponseEntity<String> createCompany(@RequestBody CompanyCreateRequest request) {
+	public CommonResponse<String> createCompany(@RequestBody CompanyCreateRequest request) {
 
 		// 1. Command 생성 (직접 new 키워드 사용)
 		CompanyCreateCommand command = new CompanyCreateCommand(
@@ -40,47 +60,86 @@ public class CompanyController {
 		CompanyCreateResult result = companyCommandService.createCompany(command);
 
 		// 3. 결과 반환
-		return ResponseEntity.ok("업체 등록 성공! 생성된 ID: " + result.companyId());
+		return CommonResponse.success("업체 등록 성공! 생성된 ID: " + result.companyId());
 	}
 
-
 	/**
-	 * 업체 단건 상세 조회
+	 * Retrieve detailed information for a single company.
+	 *
+	 * @return the company details in a GetCompanyResponse
 	 */
 	@GetMapping("/{companyId}")
-	public ResponseEntity<GetCompanyResponse> getCompany(@PathVariable UUID companyId) {
+	public CommonResponse<GetCompanyResponse> getCompany(@PathVariable UUID companyId) {
 		// 3. 이제 companyQueryService를 사용할 수 있습니다.
 		GetCompanyResponse response = companyQueryService.getCompany(companyId);
-		return ResponseEntity.ok(response);
+		// 데이터를 담아서 성공 응답 반환
+		return CommonResponse.success(response);
 	}
 
 	/**
-	 * 업체 수정
+	 * Retrieves a page of companies according to the given pagination and sorting settings.
+	 *
+	 * @param pageable pagination and sorting settings; if not provided defaults to size=10 and sorted by `createdAt` descending
+	 * @return a Page of GetCompanyResponse objects representing companies for the requested page
+	 */
+	@GetMapping
+	public CommonResponse<Page<GetCompanyResponse>> getCompanies(
+		@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+
+		Page<GetCompanyResponse> responses = companyQueryService.getCompanies(pageable);
+		return CommonResponse.success(responses);
+	}
+
+
+	/**
+	 * Updates the details of an existing company.
+	 *
+	 * @param companyId the UUID of the company to update
+	 * @param request the new company data to apply
+	 * @return a success response with no payload when the update completes
 	 */
 
 	@PutMapping("/{companyId}")
-	public ResponseEntity<Void> updateCompany(
+	public CommonResponse<Void> updateCompany(
 		@PathVariable UUID companyId,
 		@RequestBody UpdateCompanyRequest request) {
+
 		// 서비스 호출
 		companyCommandService.modifyCompany(companyId, request);
-		// 수정 성공 시 보통 200 OK 또는 204 No Content를 반환합니다.
-		return ResponseEntity.ok().build();
+
+		// 데이터가 없을 때는 success()만 호출
+		return CommonResponse.success();
 	}
 
-
 	/**
-	 * 업체 삭제 API (Soft Delete)
+	 * Soft-deletes the company identified by the given ID.
+	 *
+	 * @param companyId the UUID of the company to delete
+	 * @param userId the UUID of the user performing the deletion (from the X-User-Id header)
+	 * @return a confirmation message containing the deleted company ID
 	 */
 	@DeleteMapping("/{companyId}")
-	public ResponseEntity<String> deleteCompany( // 👈 여기가 <Void>로 되어있을 거예요. <String>으로 수정!
+	public CommonResponse<String> deleteCompany( // 👈 여기가 <Void>로 되어있을 거예요. <String>으로 수정!
 		@PathVariable UUID companyId,
 		@RequestHeader(value = "X-User-Id") UUID userId) {
 
 		companyCommandService.deleteCompany(companyId, userId);
 
-		// 이제 "성공!" 이라는 문자열(String)을 담아서 보낼 수 있습니다.
-		return ResponseEntity.ok("업체(ID: " + companyId + ")가 성공적으로 삭제되었습니다.");
+		return CommonResponse.success("업체(ID: " + companyId + ")가 성공적으로 삭제되었습니다.");
 	}
+
+
+	/**
+	 * Retrieves company names for the given company IDs and returns them as a map.
+	 *
+	 * @param companyIds the list of company UUIDs to look up
+	 * @return a map from each provided companyId to its company name for companies that were found
+	 */
+	@PostMapping("/names-by-ids")
+	public CommonResponse<Map<UUID, String>> getCompanyNames(@RequestBody List<UUID> companyIds) {
+		Map<UUID, String> response = companyQueryService.getCompanyNamesMap(companyIds);
+		return CommonResponse.success(response);
+	}
+
 
 }

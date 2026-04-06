@@ -1,13 +1,14 @@
 package com.fhsh.daitda.company.presentation.dto.response;
 
+import java.util.UUID;
+
 import com.fhsh.daitda.company.domain.entity.Company;
 import com.fhsh.daitda.company.domain.enums.CompanyStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -20,17 +21,16 @@ public class GetCompanyResponse {
 	private CompanyStatus type;
 	private AddressResponse address;
 
-	@Getter
-	@NoArgsConstructor
-	@AllArgsConstructor
-	@Builder
-	public static class AddressResponse {
-		private String city;
-		private String district;
-		private String street;
-	}
 
-	// 엔티티를 Response DTO로 변환하는 정적 팩토리 메서드
+	/**
+	 * Create a GetCompanyResponse DTO populated from the given Company domain entity.
+	 *
+	 * Copies the company's identifiers, name, and type, and maps the company's address
+	 * fields (city, district, street) into a nested AddressResponse.
+	 *
+	 * @param company the source Company entity
+	 * @return a GetCompanyResponse populated with values from {@code company}
+	 */
 	public static GetCompanyResponse from(Company company) {
 		return GetCompanyResponse.builder()
 			.companyId(company.getCompanyId())
@@ -43,5 +43,15 @@ public class GetCompanyResponse {
 				.street(company.getAddress().getStreet())
 				.build())
 			.build();
+	}
+
+	@Getter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@Builder
+	public static class AddressResponse {
+		private String city;
+		private String district;
+		private String street;
 	}
 }

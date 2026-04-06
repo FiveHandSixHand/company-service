@@ -1,18 +1,28 @@
 package com.fhsh.daitda.company.domain.entity;
 
-import com.fhsh.daitda.company.domain.enums.CompanyStatus;
-import jakarta.persistence.*;
-import lombok.*;
+import java.util.UUID;
 
 import org.hibernate.annotations.SQLRestriction;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import com.fhsh.daitda.company.domain.enums.CompanyStatus;
+import com.fhsh.daitda.domain.BaseUserEntity;
+
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "p_company")
@@ -20,12 +30,12 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@EntityListeners(AuditingEntityListener.class)
 @SQLRestriction("deleted_at IS NULL")
-public class Company {
+public class Company extends BaseUserEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
+
 	@Column(name = "company_id", updatable = false, nullable = false)
 	private UUID companyId; // ✨ 규칙 적용: 식별자 필드명 수정
 
@@ -48,47 +58,15 @@ public class Company {
 	})
 	private Address address;
 
-	// 업체 수정
-	public void update(String name, CompanyStatus type, Address address) {
-		this.name = name;
-		this.type = type;
-		this.address = address;
-		// updated_at, updated_by는 Auditing 기능으로 자동 업데이트됩니다.
-	}
-
-	// 업체 삭제
-	public void delete(UUID userId) {
-		this.deletedAt = LocalDateTime.now();
-		this.deletedBy = userId;
-		// 만약 is_active 필드가 있다면 false로 바꿀 수도 있습니다.
-	}
-
-
-
-	// --- Audit 필드 ---
-	@CreatedDate
-	@Column(name = "created_at", updatable = false)
-	private LocalDateTime createdAt;
-
-	@CreatedBy
-	@Column(name = "created_by")
-	private UUID createdBy;
-
-	@LastModifiedDate
-	@Column(name = "updated_at")
-	private LocalDateTime updatedAt;
-
-	@LastModifiedBy
-	@Column(name = "updated_by")
-	private UUID updatedBy;
-
-	@Column(name = "deleted_at")
-	private LocalDateTime deletedAt;
-
-	@Column(name = "deleted_by")
-	private UUID deletedBy;
-
-	// ✨ 정적 팩토리 메서드 수정: 파라미터로 Address 객체를 받음
+	/**
+	 * Create a new Company instance with the specified hub, type, name, and address.
+	 *
+	 * @param hubId   the identifier of the hub the company belongs to
+	 * @param type    the company's status/type
+	 * @param name    the company's name
+	 * @param address the company's address
+	 * @return        a Company populated with the provided properties; `companyId` is not set here and will be assigned by persistence
+	 */
 	public static Company create(UUID hubId, CompanyStatus type, String name, Address address) {
 		return Company.builder()
 			.hubId(hubId)
@@ -96,5 +74,32 @@ public class Company {
 			.name(name)
 			.address(address)
 			.build();
+	}
+
+	/**
+	 * Update the company's name, type, and address.
+	 *
+	 * @param name    the new company name
+	 * @param type    the new company status/type
+	 * @param address the new address for the company
+	 * 
+	 * Note: auditing fields (e.g., updatedAt, updatedBy) are updated automatically by the entity auditing mechanism.
+	 */
+	public void update(String name, CompanyStatus type, Address address) {
+		this.name = name;
+		this.type = type;
+		this.address = address;
+		// updated_at, updated_by는 Auditing 기능으로 자동 업데이트됩니다.
+	}
+
+	/**
+	 * Marks the entity as deleted by setting the deletion timestamp and the ID of the user who performed the deletion.
+	 *
+	 * @param userId the UUID of the user performing the deletion
+	 */
+	public void delete(UUID userId) {
+		// userId를 String으로 변환하여 부모의 delete 로직 실행
+		// 내부적으로 deletedAt 세팅과 deletedBy 세팅이 한꺼번에 일어납니다.
+		super.delete(userId);
 	}
 }
