@@ -1,5 +1,6 @@
 package com.fhsh.daitda.company.domain.repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -12,4 +13,5 @@ public interface CompanyRepository {
 	Company save(Company company);
 	Page<Company> findAll(Pageable pageable);
 	Optional<Company> findById(UUID id); //
+	List<Company> findAllById(List<UUID> ids);
 }

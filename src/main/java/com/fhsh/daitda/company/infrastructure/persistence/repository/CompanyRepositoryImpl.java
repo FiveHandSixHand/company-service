@@ -1,5 +1,6 @@
 package com.fhsh.daitda.company.infrastructure.persistence.repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,4 +46,12 @@ public class CompanyRepositoryImpl implements CompanyRepository {
 	public Page<Company> findAll(Pageable pageable) {
 		return jpaCompanyRepository.findAll(pageable);
 	}
+	/**
+	 * ✨  feign 리스트 구현 !
+	 */
+	@Override
+	public List<Company> findAllById(List<UUID> ids) {
+		return jpaCompanyRepository.findAllById(ids);
+	}
+
 }
