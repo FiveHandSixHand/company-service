@@ -71,7 +71,13 @@ public class CompanyCommandService {
 	}
 
 	/**
-	 * 업체 삭제  로직
+	 * Performs a soft delete of the specified company.
+	 *
+	 * Marks the company identified by companyId as deleted and records the user who performed the deletion.
+	 *
+	 * @param companyId the UUID of the company to delete
+	 * @param userId the UUID of the user performing the deletion
+	 * @throws IllegalArgumentException if no company with the given companyId exists
 	 */
 
 	@Transactional
