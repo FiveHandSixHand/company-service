@@ -80,6 +80,6 @@ public class Company extends BaseUserEntity {
 	public void delete(UUID userId) {
 		// userId를 String으로 변환하여 부모의 delete 로직 실행
 		// 내부적으로 deletedAt 세팅과 deletedBy 세팅이 한꺼번에 일어납니다.
-		super.delete(userId.toString());
+		super.delete(userId);
 	}
 }

@@ -21,7 +21,7 @@ public class GetCompanyResponse {
 	private CompanyStatus type;
 	private AddressResponse address;
 
-	// 엔티티를 Response DTO로 변환하는 정적 팩토리 메서드
+
 	public static GetCompanyResponse from(Company company) {
 		return GetCompanyResponse.builder()
 			.companyId(company.getCompanyId())

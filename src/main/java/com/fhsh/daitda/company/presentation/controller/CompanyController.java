@@ -1,7 +1,11 @@
 package com.fhsh.daitda.company.presentation.controller;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import com.fhsh.daitda.company.application.command.CompanyCreateCommand;
 import com.fhsh.daitda.company.application.result.CompanyCreateResult;
@@ -107,6 +109,12 @@ public class CompanyController {
 		return CommonResponse.success("업체(ID: " + companyId + ")가 성공적으로 삭제되었습니다.");
 	}
 
+
+	@PostMapping("/names-by-ids")
+	public CommonResponse<Map<UUID, String>> getCompanyNames(@RequestBody List<UUID> companyIds) {
+		Map<UUID, String> response = companyQueryService.getCompanyNamesMap(companyIds);
+		return CommonResponse.success(response);
+	}
 
 
 }
