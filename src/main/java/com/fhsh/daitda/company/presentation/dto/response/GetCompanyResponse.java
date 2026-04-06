@@ -22,6 +22,15 @@ public class GetCompanyResponse {
 	private AddressResponse address;
 
 
+	/**
+	 * Create a GetCompanyResponse DTO populated from the given Company domain entity.
+	 *
+	 * Copies the company's identifiers, name, and type, and maps the company's address
+	 * fields (city, district, street) into a nested AddressResponse.
+	 *
+	 * @param company the source Company entity
+	 * @return a GetCompanyResponse populated with values from {@code company}
+	 */
 	public static GetCompanyResponse from(Company company) {
 		return GetCompanyResponse.builder()
 			.companyId(company.getCompanyId())

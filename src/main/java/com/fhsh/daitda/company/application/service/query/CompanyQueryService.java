@@ -25,7 +25,11 @@ public class CompanyQueryService {
 	private final CompanyRepository companyRepository;
 
 	/**
-	 * 업체 단건 상세 조회
+	 * Retrieve detailed information for a single company by its ID.
+	 *
+	 * @param companyId UUID of the company to retrieve
+	 * @return GetCompanyResponse containing the company's details
+	 * @throws IllegalArgumentException if no company with the given ID exists
 	 */
 	public GetCompanyResponse getCompany(UUID companyId) {
 		Company company = companyRepository.findById(companyId)
@@ -34,7 +38,10 @@ public class CompanyQueryService {
 		return GetCompanyResponse.from(company);
 	}
 	/**
-	 * 업체 전체 조회
+	 * Retrieve a paginated list of companies converted to GetCompanyResponse DTOs.
+	 *
+	 * @param pageable pagination and sorting information
+	 * @return a Page of GetCompanyResponse objects corresponding to the requested page of companies
 	 */
 
 	@Transactional(readOnly = true)
@@ -45,7 +52,10 @@ public class CompanyQueryService {
 
 
 	/**
-	 * FeignClient용: 업체 ID 리스트로 업체 이름 맵 조회
+	 * Produce a map from company ID to company name for the specified company IDs.
+	 *
+	 * @param companyIds list of company UUIDs to look up
+	 * @return a map mapping each found company UUID to its name; any IDs without a matching company are omitted
 	 */
 	public Map<UUID, String> getCompanyNamesMap(List<UUID> companyIds) {
 		// 1. 레포지토리에서 ID 리스트에 해당하는 업체들을 한꺼번에 가져옵니다.

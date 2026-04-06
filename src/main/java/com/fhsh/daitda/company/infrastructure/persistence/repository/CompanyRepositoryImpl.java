@@ -26,28 +26,40 @@ public class CompanyRepositoryImpl implements CompanyRepository {
 
 	private final JpaCompanyRepository jpaCompanyRepository;
 	/**
-	 * ✨  회사 생성 구현
+	 * Persist the given company and return the saved entity.
+	 *
+	 * @param company the company to persist
+	 * @return the persisted Company entity
 	 */
 	@Override
 	public Company save(Company company) {
 		return jpaCompanyRepository.save(company);
 	}
 	/**
-	 * ✨ 단건  조회 구현
+	 * Retrieves a Company by its UUID.
+	 *
+	 * @param id the UUID of the company to retrieve
+	 * @return an Optional containing the Company if found, or an empty Optional if not
 	 */
 	@Override
 	public Optional<Company> findById(UUID id) {
 		return jpaCompanyRepository.findById(id);
 	}
 	/**
-	 * ✨  전체 조회(페이징) 구현
+	 * Retrieves a page of Company entities according to the provided pagination and sorting.
+	 *
+	 * @param pageable controls the page number, page size, and sort order
+	 * @return a Page containing the Company entities for the requested page
 	 */
 	@Override
 	public Page<Company> findAll(Pageable pageable) {
 		return jpaCompanyRepository.findAll(pageable);
 	}
 	/**
-	 * ✨  feign 리스트 구현 !
+	 * Retrieves Company entities matching any of the given IDs.
+	 *
+	 * @param ids list of UUIDs identifying the companies to retrieve
+	 * @return a list of Company entities whose IDs are contained in {@code ids}; order is not guaranteed
 	 */
 	@Override
 	public List<Company> findAllById(List<UUID> ids) {

@@ -37,7 +37,7 @@ public class Company extends BaseUserEntity {
 	@GeneratedValue(strategy = GenerationType.UUID)
 
 	@Column(name = "company_id", updatable = false, nullable = false)
-	private UUID companyId; //  식별자 필드명 수정 확인!
+	private UUID companyId; // ✨ 규칙 적용: 식별자 필드명 수정
 
 	@Column(name = "hub_id", nullable = false)
 	private UUID hubId;
@@ -58,7 +58,15 @@ public class Company extends BaseUserEntity {
 	})
 	private Address address;
 
-	// ✨ 정적 팩토리 메서드 수정: 파라미터로 Address 객체를 받음! 엔티티 수정중
+	/**
+	 * Create a new Company instance with the specified hub, type, name, and address.
+	 *
+	 * @param hubId   the identifier of the hub the company belongs to
+	 * @param type    the company's status/type
+	 * @param name    the company's name
+	 * @param address the company's address
+	 * @return        a Company populated with the provided properties; `companyId` is not set here and will be assigned by persistence
+	 */
 	public static Company create(UUID hubId, CompanyStatus type, String name, Address address) {
 		return Company.builder()
 			.hubId(hubId)
@@ -71,7 +79,15 @@ public class Company extends BaseUserEntity {
 
 	}
 
-	// 업체 수정 입니다
+	/**
+	 * Update the company's name, type, and address.
+	 *
+	 * @param name    the new company name
+	 * @param type    the new company status/type
+	 * @param address the new address for the company
+	 *
+	 * Note: auditing fields (e.g., updatedAt, updatedBy) are updated automatically by the entity auditing mechanism.
+	 */
 	public void update(String name, CompanyStatus type, Address address) {
 		this.name = name;
 		this.type = type;
@@ -79,7 +95,11 @@ public class Company extends BaseUserEntity {
 		// updated_at, updated_by는 Auditing 기능으로 자동 업데이트됩니다.
 	}
 
-	// 업체 삭제
+	/**
+	 * Marks the entity as deleted by setting the deletion timestamp and the ID of the user who performed the deletion.
+	 *
+	 * @param userId the UUID of the user performing the deletion
+	 */
 	public void delete(UUID userId) {
 		// userId를 String으로 변환하여 부모의 delete 로직 실행
 		// 내부적으로 deletedAt 세팅과 deletedBy 세팅이 한꺼번에 일어납니다.
