@@ -37,7 +37,7 @@ public class Company extends BaseUserEntity {
 	@GeneratedValue(strategy = GenerationType.UUID)
 
 	@Column(name = "company_id", updatable = false, nullable = false)
-	private UUID companyId; //  식별자 필드명 수정
+	private UUID companyId; //  식별자 필드명 수정 확인!
 
 	@Column(name = "hub_id", nullable = false)
 	private UUID hubId;
