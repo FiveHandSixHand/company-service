@@ -40,7 +40,10 @@ public class CompanyController {
 	private final CompanyQueryService companyQueryService;
 
 	/**
-	 * 업체 등록 API
+	 * Creates a new company from the provided request.
+	 *
+	 * @param request the company creation request containing hubId, type, name, and address
+	 * @return a success message that includes the created company's ID
 	 */
 	@PostMapping
 	public CommonResponse<String> createCompany(@RequestBody CompanyCreateRequest request) {
@@ -61,7 +64,9 @@ public class CompanyController {
 	}
 
 	/**
-	 * 업체 단건 상세 조회
+	 * Retrieve detailed information for a single company.
+	 *
+	 * @return the company details in a GetCompanyResponse
 	 */
 	@GetMapping("/{companyId}")
 	public CommonResponse<GetCompanyResponse> getCompany(@PathVariable UUID companyId) {
@@ -71,6 +76,12 @@ public class CompanyController {
 		return CommonResponse.success(response);
 	}
 
+	/**
+	 * Retrieves a page of companies according to the given pagination and sorting settings.
+	 *
+	 * @param pageable pagination and sorting settings; if not provided defaults to size=10 and sorted by `createdAt` descending
+	 * @return a Page of GetCompanyResponse objects representing companies for the requested page
+	 */
 	@GetMapping
 	public CommonResponse<Page<GetCompanyResponse>> getCompanies(
 		@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -81,7 +92,11 @@ public class CompanyController {
 
 
 	/**
-	 * 업체 수정
+	 * Updates the details of an existing company.
+	 *
+	 * @param companyId the UUID of the company to update
+	 * @param request the new company data to apply
+	 * @return a success response with no payload when the update completes
 	 */
 
 	@PutMapping("/{companyId}")
@@ -97,7 +112,11 @@ public class CompanyController {
 	}
 
 	/**
-	 * 업체 삭제 API (Soft Delete)
+	 * Soft-deletes the company identified by the given ID.
+	 *
+	 * @param companyId the UUID of the company to delete
+	 * @param userId the UUID of the user performing the deletion (from the X-User-Id header)
+	 * @return a confirmation message containing the deleted company ID
 	 */
 	@DeleteMapping("/{companyId}")
 	public CommonResponse<String> deleteCompany( // 👈 여기가 <Void>로 되어있을 거예요. <String>으로 수정!
@@ -110,6 +129,12 @@ public class CompanyController {
 	}
 
 
+	/**
+	 * Retrieves company names for the given company IDs and returns them as a map.
+	 *
+	 * @param companyIds the list of company UUIDs to look up
+	 * @return a map from each provided companyId to its company name for companies that were found
+	 */
 	@PostMapping("/names-by-ids")
 	public CommonResponse<Map<UUID, String>> getCompanyNames(@RequestBody List<UUID> companyIds) {
 		Map<UUID, String> response = companyQueryService.getCompanyNamesMap(companyIds);

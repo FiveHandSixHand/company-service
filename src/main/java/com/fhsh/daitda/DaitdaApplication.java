@@ -10,6 +10,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableJpaAuditing
 public class DaitdaApplication {
 
+	/**
+	 * Application entry point that starts the Spring Boot application.
+	 *
+	 * @param args command-line arguments passed to the application
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run( DaitdaApplication.class, args);
 	}
