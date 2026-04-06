@@ -58,7 +58,7 @@ public class Company extends BaseUserEntity {
 	})
 	private Address address;
 
-	// ✨ 정적 팩토리 메서드 수정: 파라미터로 Address 객체를 받음
+	// ✨ 정적 팩토리 메서드 수정: 파라미터로 Address 객체를 받음!
 	public static Company create(UUID hubId, CompanyStatus type, String name, Address address) {
 		return Company.builder()
 			.hubId(hubId)
@@ -66,6 +66,9 @@ public class Company extends BaseUserEntity {
 			.name(name)
 			.address(address)
 			.build();
+
+
+
 	}
 
 	// 업체 수정
