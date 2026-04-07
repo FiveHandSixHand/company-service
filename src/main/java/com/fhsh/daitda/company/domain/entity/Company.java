@@ -74,6 +74,9 @@ public class Company extends BaseUserEntity {
 			.name(name)
 			.address(address)
 			.build();
+
+
+
 	}
 
 	/**
@@ -82,7 +85,7 @@ public class Company extends BaseUserEntity {
 	 * @param name    the new company name
 	 * @param type    the new company status/type
 	 * @param address the new address for the company
-	 * 
+	 *
 	 * Note: auditing fields (e.g., updatedAt, updatedBy) are updated automatically by the entity auditing mechanism.
 	 */
 	public void update(String name, CompanyStatus type, Address address) {

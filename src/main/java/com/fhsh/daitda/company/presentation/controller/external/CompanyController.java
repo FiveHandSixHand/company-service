@@ -1,4 +1,4 @@
-package com.fhsh.daitda.company.presentation.controller;
+package com.fhsh.daitda.company.presentation.controller.external;
 
 import java.util.List;
 import java.util.Map;
