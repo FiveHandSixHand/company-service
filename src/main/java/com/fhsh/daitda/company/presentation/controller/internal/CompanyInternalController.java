@@ -21,7 +21,7 @@ import com.fhsh.daitda.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/internal/companies")
+@RequestMapping("internal/v1/companies")
 @RequiredArgsConstructor
 @Validated
 public class CompanyInternalController {
